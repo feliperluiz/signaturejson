@@ -1,0 +1,26 @@
+{
+  "name": "signaturejson",
+  "version": "1.0.0",
+  "description": "Signature JSON",
+  "main": "index.html",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/feliperluiz/signaturejson.git"
+  },
+  "keywords": [
+    "signature",
+    "json"
+  ],
+  "author": "Felipe",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/feliperluiz/signaturejson/issues"
+  },
+  "homepage": "https://github.com/feliperluiz/signaturejson#readme",
+  "dependencies": {
+    "tls": "0.0.1"
+  }
+}
