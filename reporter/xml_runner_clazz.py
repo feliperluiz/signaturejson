@@ -4,6 +4,7 @@ import binascii
 from datetime import datetime, timedelta
 from kmiper_class import Kmiper
 from enum import Enum
+import re
 
 class TipoMSG(Enum):
 		REQUEST = 1
@@ -110,18 +111,23 @@ class XML_runner():
 			self.parse_iv_value(ereq, self.idStore, TipoMSG.REQUEST)
 
 			# ENVIO AO HSM
-			print('\033[92m'+self.hsm.parse_xml_to_pretty_string(ereq)+'\033[0m')
+			#print('\033[92m'+self.hsm.parse_xml_to_pretty_string(ereq)+'\033[0m')
 			ttlv = self.hsm.parse_xml_to_ttlv_bytes(ereq)
 			received = self.hsm.send_receive(ttlv)
-			
-			#print(received)
-			response = self.hsm.parse_ttlv_bytes_to_xml_tree(received)
 
-			responseWithSign = self.hsm.parse_xml_to_pretty_string(response)
-				
+			response = self.hsm.parse_ttlv_bytes_to_xml_tree(received)
+			responseWithSign = self.hsm.parse_xml_to_pretty_string(response)			
+			print(responseWithSign)
+
+			match = re.search(r'<SignatureData type=\"ByteString\" value=\"(.*?)\"/>', responseWithSign)
+			
+			hash_signed = ''
+			if (match):
+				hash_signed = match.group(1)
+				return hash_signed
 				
 			# RESPOSTA DO HSM
-			print('\033[94m'+self.hsm.parse_xml_to_pretty_string(response)+'\033[0m')
+			#print('\033[94m'+self.hsm.parse_xml_to_pretty_string(response)+'\033[0m')
 			
 			self.parse_uid(eres, self.idStore, TipoMSG.RESPONSE)
 			self.parse_uid(response, self.idStore, TipoMSG.RESPONSE)
@@ -138,3 +144,4 @@ class XML_runner():
 			
 			self.parse_iv_value(eres, self.idStore, TipoMSG.RESPONSE)
 			self.parse_iv_value(response, self.idStore, TipoMSG.RESPONSE)
+
