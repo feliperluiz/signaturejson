@@ -51,7 +51,7 @@ def postdata():
     # exit()
 
 def main():
-	app.run(port=5000)
+    app.run(port=5000, ssl_context=('server.crt', 'server.key'))
 		
 if __name__ == "__main__":
 	main()

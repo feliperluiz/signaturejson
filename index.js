@@ -18,7 +18,7 @@ function Sign () {
 
     $.ajax({
         type: 'POST',
-        url: 'http://localhost:5000/sign',
+        url: 'https://Felipe:5000/sign',
         data: hashDocumento,
         success: function(responseData, textStatus, jqXHR) 
         {
@@ -27,7 +27,6 @@ function Sign () {
         error: function (responseData, textStatus, errorThrown) 
         {
             console.warn(responseData, textStatus, errorThrown);
-            alert('failed - ' + textStatus);
         }
     });
 }
