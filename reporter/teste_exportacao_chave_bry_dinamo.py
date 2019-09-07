@@ -14,10 +14,12 @@ app = Flask(__name__)
 CORS(app)
 @app.route('/sign', methods = ['POST'])
 def postdata():
-    hash_to_sign = request.get_data()
+    jsonData = request.json;
+    hash_to_sign = jsonData['hash']
+    pin = jsonData['pin']
     hash_signed = ''
 
-    print('Hash que será assinado: ' + hash_to_sign.decode('utf-8'))
+    print('Hash que será assinado: ' + hash_to_sign)
     
     # cd C:/Users/Felipe/Desktop/TCC/signaturepython/reporter
     idStore = {}
@@ -33,10 +35,13 @@ def postdata():
 
     input_file = open("ktc_export_keys_hsm2_password.xml", "r")
     content = '';
-    linechange = "<Data type=\"ByteString\" value=\""+hash_to_sign.decode('utf-8')+"\" />"
+    linechange = "<Data type=\"ByteString\" value=\""+hash_to_sign+"\" />"
+    linechangePass = "<Password type=\"TextString\" value=\""+pin+"\" />"
+
     for line in input_file:
-        match_hash = re.sub(r'<Data type=\"ByteString\" value=\"(.*)\" />', linechange, line) # should be your regular expression
-        content += ''.join(match_hash)       
+        match = re.sub(r'<Data type=\"ByteString\" value=\"(.*)\" />', linechange, line) # should be your regular expression
+        match = re.sub(r'<Password type=\"TextString\" value=\"(.*)\" />', linechangePass, line)
+        content += ''.join(match)    
     
     input_file.close()
     output_file = open("ktc_export_keys_hsm2_password.xml", "w")
