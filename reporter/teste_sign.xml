@@ -11,7 +11,7 @@
 <CredentialType type="Enumeration" value="UsernameAndPassword" />
 <CredentialValue>
 <Username type="TextString" value="felipe" />
-<Password type="TextString" value="12" />
+<Password type="TextString" value="12345678" />
 </CredentialValue>
 </Credential>
 </Authentication>
@@ -78,7 +78,7 @@
 <CredentialType type="Enumeration" value="UsernameAndPassword" />
 <CredentialValue>
 <Username type="TextString" value="felipe" />
-<Password type="TextString" value="12" />
+<Password type="TextString" value="12345678" />
 </CredentialValue>
 </Credential>
 </Authentication>
@@ -134,7 +134,7 @@
 <CredentialType type="Enumeration" value="UsernameAndPassword" />
 <CredentialValue>
 <Username type="TextString" value="felipe" />
-<Password type="TextString" value="12" />
+<Password type="TextString" value="12345678" />
 </CredentialValue>
 </Credential>
 </Authentication>
@@ -205,7 +205,7 @@
 <CredentialType type="Enumeration" value="UsernameAndPassword" />
 <CredentialValue>
 <Username type="TextString" value="felipe" />
-<Password type="TextString" value="12" />
+<Password type="TextString" value="12345678" />
 </CredentialValue>
 </Credential>
 </Authentication>
@@ -246,7 +246,7 @@
 <CredentialType type="Enumeration" value="UsernameAndPassword" />
 <CredentialValue>
 <Username type="TextString" value="felipe" />
-<Password type="TextString" value="12" />
+<Password type="TextString" value="12345678" />
 </CredentialValue>
 </Credential>
 </Authentication>
@@ -261,7 +261,7 @@
 <CryptographicAlgorithm type="Enumeration" value="RSA" />
 </CryptographicParameters>
 <UniqueIdentifier type="TextString" value="$EXPORTER_TBE_PRIV_UID" />
-<Data type="ByteString" value="7d27dfc62228665a2bf157aef4b574700d72f8e9aca118c3d9cea0f272eb5b66" />
+<Data type="ByteString" value="3aea3b527e19523f691119c0374987efe84a69fdf55c329dfb3d0e2562631988" />
 </RequestPayload>
 </BatchItem>
 </RequestMessage>

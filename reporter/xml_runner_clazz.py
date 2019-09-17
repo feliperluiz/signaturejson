@@ -84,25 +84,14 @@ class XML_runner():
 		
 	def init_test(self):
 	
-		PATH = "report/"
-	
 		with open(self.xmlfile, 'r') as file:
 			file_data = file.read().replace('\n', '').replace('\t','')
 			
-
-		
 		testcase = ElementTree.fromstring(file_data)
 		for i in range(0,len(testcase), 2):
-			expectedResults = ""		
 			ereq = testcase[i]
-			eres = testcase[i+1] #resposta que já está programada no envio
+			eres = testcase[i+1]
 
-			expectedResults += self.hsm.name
-			expectedResults += "\n"
-			expectedResults += self.hsm.parse_xml_to_pretty_string(ereq)
-			expectedResults += self.hsm.parse_xml_to_pretty_string(eres)
-			expectedResults += "\n\\newpage\n"
-			
 			self.parse_xml_timestamp(ereq)
 			self.parse_uid(ereq, self.idStore, TipoMSG.REQUEST)
 			self.parse_modulus(ereq, self.idStore, TipoMSG.REQUEST)
@@ -110,13 +99,21 @@ class XML_runner():
 			self.parse_key_value(ereq, self.idStore, TipoMSG.REQUEST)
 			self.parse_iv_value(ereq, self.idStore, TipoMSG.REQUEST)
 
-			# ENVIO AO HSM
-			#print('\033[92m'+self.hsm.parse_xml_to_pretty_string(ereq)+'\033[0m')
+			print('Envio ao HSM')
+			print('\033[92m'+self.hsm.parse_xml_to_pretty_string(ereq)+'\033[0m')		
 			ttlv = self.hsm.parse_xml_to_ttlv_bytes(ereq)
-			received = self.hsm.send_receive(ttlv)
-
+	
+			print('Tempo antes de enviar o TTLV ao HSM') 
+			print(datetime.now())
+			
+			received = self.hsm.send_receive(ttlv)			
+			
+			print('Tempo depois de receber o TTLV do HSM')
+			print(datetime.now())
 			response = self.hsm.parse_ttlv_bytes_to_xml_tree(received)
-			responseWithSign = self.hsm.parse_xml_to_pretty_string(response)			
+			responseWithSign = self.hsm.parse_xml_to_pretty_string(response)
+
+			print('Retorno do HSM')			
 			print(responseWithSign)
 
 			match = re.search(r'<SignatureData type=\"ByteString\" value=\"(.*?)\"/>', responseWithSign)
@@ -124,6 +121,8 @@ class XML_runner():
 			hash_signed = ''
 			if (match):
 				hash_signed = match.group(1)
+				print('Tempo depois de transformar o TTLV para XML novamente')
+				print(datetime.now())
 				return hash_signed
 				
 			# RESPOSTA DO HSM
@@ -144,4 +143,3 @@ class XML_runner():
 			
 			self.parse_iv_value(eres, self.idStore, TipoMSG.RESPONSE)
 			self.parse_iv_value(response, self.idStore, TipoMSG.RESPONSE)
-

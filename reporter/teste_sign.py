@@ -14,13 +14,15 @@ app = Flask(__name__)
 CORS(app)
 @app.route('/sign', methods = ['POST'])
 def postdata():
+
+    print('Tempo ao chegar do Cliente')
+    print(datetime.now())
+    
     jsonData = request.json;
     hash_to_sign = jsonData['hash']
     pin = jsonData['pin']
     hash_signed = ''
 
-    print('Hash que será assinado: ' + hash_to_sign)
-    
     # cd C:/Users/Felipe/Desktop/TCC/signaturepython/reporter
     idStore = {}
     keyfile_hsm1 = "keyfelipe.pem"
@@ -33,25 +35,41 @@ def postdata():
     if(hsm1.connect() != True):
 	    exit()
 
-    input_file = open("ktc_export_keys_hsm2_password.xml", "r")
+    input_file = open("teste_sign.xml", "r")
     content = '';
     linechange = "<Data type=\"ByteString\" value=\""+hash_to_sign+"\" />"
     linechangePass = "<Password type=\"TextString\" value=\""+pin+"\" />"
 
     for line in input_file:
-        match = re.sub(r'<Data type=\"ByteString\" value=\"(.*)\" />', linechange, line) # should be your regular expression
-        match = re.sub(r'<Password type=\"TextString\" value=\"(.*)\" />', linechangePass, line)
-        content += ''.join(match)    
-    
+        #match = re.sub(r'<Data type=\"ByteString\" value=\"(.*)\" />', linechange, line) # should be your regular expression
+        #match2 = re.sub(r'<Password type=\"TextString\" value=\"(.*)\" />', linechangePass, line)
+        
+        match1 = re.compile(r'<Data type=\"ByteString\" value=\"(.*)\" />') # should be your regular expression
+        mo1 = match1.search(line)
+
+        match2 = re.compile(r'<Password type=\"TextString\" value=\"(.*)\" />')
+        mo2 = match2.search(line)
+        
+        if mo1 is not None:
+            match = re.sub(r'<Data type=\"ByteString\" value=\"(.*)\" />', linechange, line)
+            content += ''.join(match)
+        elif mo2 is not None:
+            match = re.sub(r'<Password type=\"TextString\" value=\"(.*)\" />', linechangePass, line)
+            content += ''.join(match)
+        else:
+            content += ''.join(line)
+
     input_file.close()
-    output_file = open("ktc_export_keys_hsm2_password.xml", "w")
+    output_file = open("teste_sign.xml", "w")
     output_file.write(content)
     output_file.close()
     
-    xml2 = XML_runner(hsm1, "ktc_export_keys_hsm2_password.xml", idStore)
+    xml2 = XML_runner(hsm1, "teste_sign.xml", idStore)
     hash_signed = xml2.init_test()
-    
     hsm1.disconnect()
+
+    print('Tempo ao retornar o hash ao navegador')
+    print(datetime.now())
     return hash_signed
     # exit()
 
@@ -59,4 +77,4 @@ def main():
     app.run(port=5000, ssl_context=('server.crt', 'server.key'))
 		
 if __name__ == "__main__":
-	main()
+    main()
