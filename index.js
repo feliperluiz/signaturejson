@@ -9,6 +9,7 @@ function onChange(event) {
     readerFile.onload = function(event){
         var arrayBuffer = event.target.result;
         hashDocumento = CryptoJS.SHA256(arrayBuffer).toString(CryptoJS.enc.Hex);
+        console.log(hashDocumento)
         arraySign.hash = hashDocumento;
     }
 }
@@ -41,7 +42,6 @@ function downloadFile(sign) {
     var filename = "file.signature";
     var blob = new Blob([sign], {type: 'text/plain'});
     if (window.navigator && window.navigator.msSaveOrOpenBlob) {
-        console.log('pe')
         window.navigator.msSaveOrOpenBlob(blob, filename);
     } else{
         var e = document.createEvent('MouseEvents'),
