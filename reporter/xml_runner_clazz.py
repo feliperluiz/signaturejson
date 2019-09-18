@@ -61,8 +61,11 @@ class XML_runner():
 					if value in xml_node.attrib['value']:
 						idStore[xml_node.tag] = xml_node.attrib['value']
 					else:
-						uid_str = idStore[xml_node.tag]
-						idStore[uid_str] = xml_node.attrib['value']
+						if xml_node.tag != "UniqueIdentifier":
+							uid_str = idStore[xml_node.tag]
+							idStore[uid_str] = xml_node.attrib['value']
+						else:
+							return
 		for e in xml_node:
 			self.parse_tag(e, idStore, tipoMsg, tag, value)
 	
