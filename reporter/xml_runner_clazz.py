@@ -29,10 +29,10 @@ class XML_runner():
 	def parse_xml_timestamp(self, xml_node):
 		if "value" in xml_node.attrib:
 			if "$NOW-3600" in xml_node.attrib['value']:
-				print("found timestamp to replace: " + (datetime.utcnow() - timedelta(seconds=3600)).isoformat() )
+				#print("found timestamp to replace: " + (datetime.utcnow() - timedelta(seconds=3600)).isoformat() )
 				xml_node.attrib['value'] = (datetime.utcnow() - timedelta(seconds=3600)).isoformat()
 			elif "$NOW" in xml_node.attrib['value']:
-				print("found timestamp to replace: " + datetime.utcnow().isoformat())
+				#print("found timestamp to replace: " + datetime.utcnow().isoformat())
 				xml_node.attrib['value'] = datetime.utcnow().isoformat()
 		for e in xml_node:
 			self.parse_xml_timestamp(e)
@@ -102,35 +102,26 @@ class XML_runner():
 			self.parse_key_value(ereq, self.idStore, TipoMSG.REQUEST)
 			self.parse_iv_value(ereq, self.idStore, TipoMSG.REQUEST)
 
-			print('Envio ao HSM')
-			print('\033[92m'+self.hsm.parse_xml_to_pretty_string(ereq)+'\033[0m')		
+			print(self.hsm.parse_xml_to_pretty_string(ereq))		
 			ttlv = self.hsm.parse_xml_to_ttlv_bytes(ereq)
 	
-			print('Tempo antes de enviar o TTLV ao HSM') 
+			print('3- Tempo antes de enviar o TTLV ao HSM') 
 			print(datetime.now())
 			
 			received = self.hsm.send_receive(ttlv)			
 			
-			print('Tempo depois de receber o TTLV do HSM')
+			print('4- Tempo depois de receber o TTLV do HSM')
 			print(datetime.now())
 			response = self.hsm.parse_ttlv_bytes_to_xml_tree(received)
 			responseWithSign = self.hsm.parse_xml_to_pretty_string(response)
-
-			print('Retorno do HSM')			
 			print(responseWithSign)
 
-			match = re.search(r'<SignatureData type=\"ByteString\" value=\"(.*?)\"/>', responseWithSign)
-			
+			match = re.search(r'<SignatureData type=\"ByteString\" value=\"(.*?)\"/>', responseWithSign)			
 			hash_signed = ''
 			if (match):
 				hash_signed = match.group(1)
-				print('Tempo depois de transformar o TTLV para XML novamente')
-				print(datetime.now())
 				return hash_signed
 				
-			# RESPOSTA DO HSM
-			#print('\033[94m'+self.hsm.parse_xml_to_pretty_string(response)+'\033[0m')
-			
 			self.parse_uid(eres, self.idStore, TipoMSG.RESPONSE)
 			self.parse_uid(response, self.idStore, TipoMSG.RESPONSE)
 			self.parse_xml_timestamp(response)

@@ -1,22 +1,21 @@
-let arraySign = {}
-let signature = '';
+var arraySign = {}
+var signature = '';
 
 function onChange(event) { 
-    var time1 = new Date().getTime();
     var logFile = $('#input_file').get(0).files[0];
     var readerFile = new FileReader();
     readerFile.readAsBinaryString(logFile);
     readerFile.onload = function(event){
         var arrayBuffer = event.target.result;
         hashDocumento = CryptoJS.SHA256(arrayBuffer).toString(CryptoJS.enc.Hex);
-        console.log(hashDocumento)
         arraySign.hash = hashDocumento;
     }
+    
 }
-//cd c:/Users/Felipe/Desktop/TCC/Signature/reporter
+//cd c:/Users/Felipe/Desktop/TCC/signaturepython/reporter/teste_sign.py
 function Sign () {  
   
-  console.log(new Date() + " " + new Date().getMilliseconds())
+  console.log(new Date().getHours() + ":" + new Date().getMinutes() + ":" + new Date().getSeconds() + ":" + new Date().getMilliseconds());
 
   arraySign.pin = document.getElementById("pin").value;
     $.ajax({
@@ -26,8 +25,8 @@ function Sign () {
         data: JSON.stringify(arraySign),
         success: function(responseData, textStatus, jqXHR) 
         {
-            console.log(new Date() + " " + new Date().getMilliseconds())
             signature = responseData
+            console.log(new Date().getHours() + ":" + new Date().getMinutes() + ":" + new Date().getSeconds() + ":" + new Date().getMilliseconds());
             downloadFile(signature)
         },
         error: function (responseData, textStatus, errorThrown) 

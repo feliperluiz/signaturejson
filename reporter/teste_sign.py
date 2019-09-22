@@ -15,7 +15,7 @@ CORS(app)
 @app.route('/sign', methods = ['POST'])
 def postdata():
 
-    print('Tempo ao chegar do Cliente')
+    print('2- Tempo ao chegar do Cliente')
     print(datetime.now())
     
     jsonData = request.json;
@@ -41,9 +41,6 @@ def postdata():
     linechangePass = "<Password type=\"TextString\" value=\""+pin+"\" />"
 
     for line in input_file:
-        #match = re.sub(r'<Data type=\"ByteString\" value=\"(.*)\" />', linechange, line) # should be your regular expression
-        #match2 = re.sub(r'<Password type=\"TextString\" value=\"(.*)\" />', linechangePass, line)
-        
         match1 = re.compile(r'<Data type=\"ByteString\" value=\"(.*)\" />') # should be your regular expression
         mo1 = match1.search(line)
 
@@ -66,10 +63,9 @@ def postdata():
     
     xml2 = XML_runner(hsm1, "teste_sign.xml", idStore)
     hash_signed = xml2.init_test()
-    hsm1.disconnect()
-
-    print('Tempo ao retornar o hash ao navegador')
+    print('5- Tempo ao retornar o hash ao navegador')
     print(datetime.now())
+    hsm1.disconnect()
     return hash_signed
     # exit()
 

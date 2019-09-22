@@ -4,7 +4,7 @@
 <RequestHeader>
 <ProtocolVersion>
 <ProtocolVersionMajor type="Integer" value="1" />
-<ProtocolVersionMinor type="Integer" value="3" />
+<ProtocolVersionMinor type="Integer" value="4" />
 </ProtocolVersion>
 <Authentication>
 <Credential>
@@ -38,7 +38,6 @@
 <AttributeValue>
 <PaddingMethod type="Enumeration" value="PSS" />
 <HashingAlgorithm type="Enumeration" value="SHA_256" />
-<CryptographicAlgorithm type="Enumeration" value="RSA" />
 </AttributeValue>
 </Attribute>
 </CommonTemplateAttribute>
@@ -75,47 +74,7 @@
 </ResponsePayload>
 </BatchItem>
 </ResponseMessage>
-<RequestMessage>
-<RequestHeader>
-<ProtocolVersion>
-<ProtocolVersionMajor type="Integer" value="1" />
-<ProtocolVersionMinor type="Integer" value="3" />
-</ProtocolVersion>
-<Authentication>
-<Credential>
-<CredentialType type="Enumeration" value="UsernameAndPassword" />
-<CredentialValue>
-<Username type="TextString" value="felipe" />
-<Password type="TextString" value="12345678" />
-</CredentialValue>
-</Credential>
-</Authentication>
-<BatchCount type="Integer" value="1" />
-</RequestHeader>
-<BatchItem>
-<Operation type="Enumeration" value="Activate" />
-<RequestPayload>
-<UniqueIdentifier type="TextString" value="$EXPORTER_TBE_PRIV_UID" />
-</RequestPayload>
-</BatchItem>
-</RequestMessage>
-<ResponseMessage>
-<ResponseHeader>
-<ProtocolVersion>
-<ProtocolVersionMajor type="Integer" value="1" />
-<ProtocolVersionMinor type="Integer" value="3" />
-</ProtocolVersion>
-<TimeStamp type="DateTime" value="$NOW" />
-<BatchCount type="Integer" value="1" />
-</ResponseHeader>
-<BatchItem>
-<Operation type="Enumeration" value="Activate" />
-<ResultStatus type="Enumeration" value="Success" />
-<ResponsePayload>
-<UniqueIdentifier type="TextString" value="$UNIQUE_IDENTIFIER_0" />
-</ResponsePayload>
-</BatchItem>
-</ResponseMessage>
+
 <RequestMessage>
 <RequestHeader>
 <ProtocolVersion>
@@ -142,7 +101,7 @@
 <CryptographicAlgorithm type="Enumeration" value="RSA" />
 </CryptographicParameters>
 <UniqueIdentifier type="TextString" value="$EXPORTER_TBE_PRIV_UID" />
-<Data type="ByteString" value="bae6f5eb0889ca921825e71236c427c7c3053c92f39dba0465b73ecb5caa9335" />
+<Data type="ByteString" value="4852931559eb58686bebb1d97e4af131e6d1105af4cef950ecf963b82258620d" />
 </RequestPayload>
 </BatchItem>
 </RequestMessage>
