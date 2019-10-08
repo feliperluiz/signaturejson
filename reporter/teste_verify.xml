@@ -1,0 +1,52 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<KMIP>
+<RequestMessage>
+<RequestHeader>
+<ProtocolVersion>
+<ProtocolVersionMajor type="Integer" value="1"/>
+<ProtocolVersionMinor type="Integer" value="4"/>
+</ProtocolVersion>
+<Authentication>
+<Credential>
+<CredentialType type="Enumeration" value="UsernameAndPassword" />
+<CredentialValue>
+<Username type="TextString" value="felipe" />
+<Password type="TextString" value="12345678" />
+</CredentialValue>
+</Credential>
+</Authentication>
+<BatchCount type="Integer" value="1"/>
+</RequestHeader>
+<BatchItem>
+<Operation type="Enumeration" value="SignatureVerify"/>
+<RequestPayload>
+<CryptographicParameters>
+<PaddingMethod type="Enumeration" value="PSS" />
+<HashingAlgorithm type="Enumeration" value="SHA_256" />
+<CryptographicAlgorithm type="Enumeration" value="RSA" />
+</CryptographicParameters>
+<UniqueIdentifier type="TextString" value="$EXPORTER_TBE_PUB_UID"/>
+<Data type="ByteString" value="25f89425ffa1167400d66729c657bd6c54adc01417375c8868e130ec21897671" />
+<SignatureData type="ByteString" value="c96140455632d6714101b1c33d658f6b349b293b661fc54b5603711dbe500d92fab255b4c4586ad44edd5991bb413e68713f67d37c97e791a99866a9ee72f00ea944a9b04e3ff77470891d4410722baea5304827af534dc2b7264bccff27331c33a7046a3d363350c5c1fd98c90dff78e881ab7dc35191def730671f32612caa9d2a623c3ea9ecd2c57280f71ed140a1bb1bd603300f3e9a84e6ad36f1239affa6ede2350b1a75b04dc96c18269081d069a07b1ec1e2f63e4e216a285783cc7fb694031b5acd7e283c6bcf926b36e46a48ac38b6af201db0105f94efd6f653895fd0eed3c4e183fecda8a676fb00e65ec5a0d70d18839f5c753f2cbab65cbb78" />
+</RequestPayload>
+</BatchItem>
+</RequestMessage>
+<ResponseMessage>
+<ResponseHeader>
+<ProtocolVersion>
+<ProtocolVersionMajor type="Integer" value="1"/>
+<ProtocolVersionMinor type="Integer" value="4"/>
+</ProtocolVersion>
+<TimeStamp type="DateTime" value="$NOW"/>
+<BatchCount type="Integer" value="1"/>
+</ResponseHeader>
+<BatchItem>
+<Operation type="Enumeration" value="SignatureVerify"/>
+<ResultStatus type="Enumeration" value="Success"/>
+<ResponsePayload>
+<UniqueIdentifier type="TextString" value="$UNIQUE_IDENTIFIER_0"/>
+<ValidityIndicator type="Enumeration" value="Valid"/>
+</ResponsePayload>
+</BatchItem>
+</ResponseMessage>
+</KMIP>

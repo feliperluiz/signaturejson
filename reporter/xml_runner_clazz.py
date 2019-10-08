@@ -116,12 +116,14 @@ class XML_runner():
 			responseWithSign = self.hsm.parse_xml_to_pretty_string(response)
 			print(responseWithSign)
 
-			match = re.search(r'<SignatureData type=\"ByteString\" value=\"(.*?)\"/>', responseWithSign)			
-			hash_signed = ''
-			if (match):
-				hash_signed = match.group(1)
-				return hash_signed
-				
+			matchSign = re.search(r'<SignatureData type=\"ByteString\" value=\"(.*?)\"/>', responseWithSign)			
+			matchValid = re.search(r'<ValidityIndicator type=\"Enumeration\" value=\"(.*?)\"/>', responseWithSign)			
+
+			if matchSign:
+				return matchSign.group(1)
+			elif matchValid == "Valid":
+				return true
+
 			self.parse_uid(eres, self.idStore, TipoMSG.RESPONSE)
 			self.parse_uid(response, self.idStore, TipoMSG.RESPONSE)
 			self.parse_xml_timestamp(response)
