@@ -22,45 +22,27 @@ function Sign () {
 
   arraySign.pin = document.getElementById("pin").value;
 
-  var xmlhttp = new XMLHttpRequest();   // new HttpRequest instance 
+  var xmlhttp = new XMLHttpRequest();
   var theUrl = "https://Felipe:5000/sign";
   xmlhttp.open("POST", theUrl);
   xmlhttp.setRequestHeader("Content-Type", "application/json;charset=UTF-8");
   xmlhttp.onload = function(e) {
   if (this.status == 200) {
-    signature = this.response
+    var jsonParser = JSON.parse(this.response)
+    isValid = jsonParser.valid;
+    signature = jsonParser.signature;
+    if (isValid) {
+        $("#isValid").show();
+    } else {
+        $("#isInvalid").show();
+    }
     console.log(new Date().getHours() + ":" + new Date().getMinutes() + ":" + new Date().getSeconds() + ":" + new Date().getMilliseconds());
-    console.log(this.response);
     downloadFile(signature);
   } else {
     console.log(e);
   }
 }
   xmlhttp.send(JSON.stringify(arraySign))
-
-
-//   xmlhttp.onreadystatechange = function() {
-//         if (this.readyState == 4 && this.status == 200) {
-//             console.log(this.responseText);
-//         }
-// };
-    // $.ajax({
-    //     type: 'POST',
-    //     url: 'https://Felipe:5000/sign',
-    //     contentType: 'application/json; charset=utf-8',
-    //     data: JSON.stringify(arraySign),
-    //     success: function(responseData, textStatus, jqXHR) 
-    //     {
-    //         signature = responseData
-    //         console.log(new Date().getHours() + ":" + new Date().getMinutes() + ":" + new Date().getSeconds() + ":" + new Date().getMilliseconds());
-    //         downloadFile(signature)
-    //     },
-    //     error: function (responseData, textStatus, errorThrown) 
-    //     {
-    //         console.log('Erro: ' + responseData)
-    //         console.warn(responseData, textStatus, errorThrown)
-    //     }
-    // });
     //openssl req -config "C:\Program Files (x86)\GnuWin32\share\openssl.cnf" -nodes -x509 -newkey rsa:2048 -keyout keyfeliperluiz.pem -out certfeliperluiz.pem -days 365
 }
 

@@ -112,6 +112,7 @@ class XML_runner():
 			
 			print('4- Tempo depois de receber o TTLV do HSM')
 			print(datetime.now())
+
 			response = self.hsm.parse_ttlv_bytes_to_xml_tree(received)
 			responseWithSign = self.hsm.parse_xml_to_pretty_string(response)
 			print(responseWithSign)
@@ -120,9 +121,14 @@ class XML_runner():
 			matchValid = re.search(r'<ValidityIndicator type=\"Enumeration\" value=\"(.*?)\"/>', responseWithSign)			
 
 			if matchSign:
+				print('Passou aqui no match do SignatureData')
 				return matchSign.group(1)
-			elif matchValid == "Valid":
-				return true
+			elif matchValid:
+				if matchValid.group(1) == 'Valid':
+					print('Passou aqui no match do Valid')
+					return True
+				else:
+					return False
 
 			self.parse_uid(eres, self.idStore, TipoMSG.RESPONSE)
 			self.parse_uid(response, self.idStore, TipoMSG.RESPONSE)

@@ -1,14 +1,14 @@
 from kmiper.kmiper import *
 import sys
 import binascii
+import json
+import re
+import fileinput
 from datetime import datetime, timedelta
 from kmiper_class_3 import Kmiper
 from xml_runner_clazz import XML_runner
 from flask import Flask, request
 from flask_cors import CORS, cross_origin
-import json
-import re
-import fileinput
 
 app = Flask(__name__)
 CORS(app)
@@ -21,7 +21,8 @@ def postdata():
     jsonData = request.json;
     hash_to_sign = jsonData['hash']
     pin = jsonData['pin']
-    hash_signed = ''
+    linechange = "<Data type=\"ByteString\" value=\""+hash_to_sign+"\" />"
+    linechangePass = "<Password type=\"TextString\" value=\""+pin+"\" />"
 
     # cd C:/Users/Felipe/Desktop/TCC/signaturepython/reporter
     idStore = {}
@@ -37,8 +38,7 @@ def postdata():
 
     sign_file = open("teste_sign.xml", "r")
     content = '';
-    linechange = "<Data type=\"ByteString\" value=\""+hash_to_sign+"\" />"
-    linechangePass = "<Password type=\"TextString\" value=\""+pin+"\" />"
+
     for line in sign_file:
         match1 = re.compile(r'<Data type=\"ByteString\" value=\"(.*)\" />') # should be your regular expression
         mo1 = match1.search(line)
@@ -48,13 +48,9 @@ def postdata():
         
         if mo1 is not None:
             match = re.sub(r'<Data type=\"ByteString\" value=\"(.*)\" />', linechange, line)
-            print('Match Data')
-            print(match)
             content += ''.join(match)
         elif mo2 is not None:
             match = re.sub(r'<Password type=\"TextString\" value=\"(.*)\" />', linechangePass, line)
-            print('Match Pass')
-            print(match)
             content += ''.join(match)
         else:
             content += ''.join(line)
@@ -66,20 +62,19 @@ def postdata():
 
     xml1 = XML_runner(hsm1, "teste_sign.xml", idStore)
     hash_signed = xml1.init_test()
+    linechangeSignature = "<SignatureData type=\"ByteString\" value=\""+hash_signed+"\" />"
 
     print('5- Tempo ao retornar o hash ao navegador')
     print(datetime.now())
 
     verify_file = open("teste_verify.xml", "r")
     content = '';
-    linechange = "<Data type=\"ByteString\" value=\""+hash_to_sign+"\" />"
-    linechangePass = "<Password type=\"TextString\" value=\""+pin+"\" />"
-    linechangeSignature = "<SignatureData type=\"ByteString\" value=\""+hash_signed+"\" />"
+    
     for line in verify_file:
         match1 = re.compile(r'<SignatureData type=\"ByteString\" value=\"(.*)\" />')
         mo1 = match1.search(line)
 
-        match2 = re.compile(r'<Data type=\"ByteString\" value=\"(.*)\" />') # should be your regular expression
+        match2 = re.compile(r'<Data type=\"ByteString\" value=\"(.*)\" />')
         mo2 = match2.search(line)
 
         match3 = re.compile(r'<Password type=\"TextString\" value=\"(.*)\" />')
@@ -87,22 +82,15 @@ def postdata():
 
         if mo1 is not None:
             match = re.sub(r'<SignatureData type=\"ByteString\" value=\"(.*)\" />', linechangeSignature, line)
-            print('Match Signature')
-            print(match)
             content += ''.join(match)
         elif mo2 is not None:
             match = re.sub(r'<Data type=\"ByteString\" value=\"(.*)\" />', linechange, line)
-            print('Match Data')
-            print(match)
             content += ''.join(match)
         elif mo3 is not None:
             match = re.sub(r'<Password type=\"TextString\" value=\"(.*)\" />', linechangePass, line)
-            print('Match Pass')
-            print(match)
             content += ''.join(match)
         else:
             content += ''.join(line)
-
 
     verify_file.close()
     output_file_verify = open("teste_verify.xml", "w")
@@ -110,11 +98,16 @@ def postdata():
     output_file_verify.close()
 
     xml2 = XML_runner(hsm1, "teste_verify.xml", idStore)
-    xml2.init_test()
-   
+    is_valid = xml2.init_test()
+    print('valid')
+    print(is_valid)
     hsm1.disconnect()
-    return hash_signed
-    # exit()
+
+    data = {}
+    data['signature'] = hash_signed
+    data['valid'] = is_valid
+    json_final = json.dumps(data)
+    return json_final
 
 def main():
     app.run(host= 'Felipe', port=5000, ssl_context=('server.crt', 'server.key'))
