@@ -26,9 +26,6 @@ class Kmiper():
 		self.create_socket()
 		
 	def create_socket(self):
-		"""
-		From PyKmip
-		"""
 		sock = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
 		
 		sock = ssl.wrap_socket(
@@ -42,9 +39,6 @@ class Kmiper():
 		self.sock = sock
 		
 	def connect(self):
-		"""
-		From PyKmip
-		"""
 		try:
 			self.sock.connect((self.address, self.port))
 			return True 
@@ -55,20 +49,12 @@ class Kmiper():
 			return False
 			
 	def disconnect(self):
-		"""
-		From PyKmip
-		"""
 		if self.sock:
 			try:
 				self.sock.shutdown(socket.SHUT_RDWR)
 				self.sock.close()
 			except OSError:
-				# Can be thrown if the socket is not actually connected to
-				# anything. In this case, ignore the error. (from PyKmip)
 				pass
-		
-	#Write and Read
-
 	def write(self, byte_string):
 		sbuffer = bytes(byte_string)
 		self.sock.sendall(sbuffer)
@@ -76,10 +62,7 @@ class Kmiper():
 	def read(self):
 		read_block_size = 4096
 		total_msg = b''
-		# while 1:
 		msg = self.sock.recv(read_block_size)
-		# if not msg:
-		# 	break
 		total_msg += msg
 		return total_msg
 

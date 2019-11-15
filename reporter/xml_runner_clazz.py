@@ -2,7 +2,7 @@ from kmiper.kmiper import *
 import sys
 import binascii
 from datetime import datetime, timedelta
-from kmiper_class import Kmiper
+from kmiper_class_3 import Kmiper
 from enum import Enum
 import re
 
@@ -11,13 +11,11 @@ class TipoMSG(Enum):
 		RESPONSE = 2
 		
 class XML_runner():
-
 	hsm = None
 	xmlfile = None
 	idStore = {}
 	
-	def __init__(self, hsm, xmlfile, idStore):
-	
+	def __init__(self, hsm, xmlfile, idStore):	
 		self.hsm = hsm
 		self.xmlfile = xmlfile
 		self.idStore = idStore
@@ -29,15 +27,12 @@ class XML_runner():
 	def parse_xml_timestamp(self, xml_node):
 		if "value" in xml_node.attrib:
 			if "$NOW-3600" in xml_node.attrib['value']:
-				#print("found timestamp to replace: " + (datetime.utcnow() - timedelta(seconds=3600)).isoformat() )
 				xml_node.attrib['value'] = (datetime.utcnow() - timedelta(seconds=3600)).isoformat()
 			elif "$NOW" in xml_node.attrib['value']:
-				#print("found timestamp to replace: " + datetime.utcnow().isoformat())
 				xml_node.attrib['value'] = datetime.utcnow().isoformat()
 		for e in xml_node:
 			self.parse_xml_timestamp(e)
-
-			
+	
 	def parse_tag(self, xml_node, idStore, tipoMsg, tag, value):
 		if tag in xml_node.tag.lower():
 			if tipoMsg == TipoMSG.REQUEST:
@@ -84,9 +79,7 @@ class XML_runner():
 	def parse_iv_value(self, xml_node, idStore, tipoMsg):
 		self.parse_tag(xml_node, idStore, tipoMsg, "ivcounternonce", "IV")
 					
-		
 	def init_test(self):
-	
 		with open(self.xmlfile, 'r') as file:
 			file_data = file.read().replace('\n', '').replace('\t','')
 			
@@ -102,30 +95,17 @@ class XML_runner():
 			self.parse_key_value(ereq, self.idStore, TipoMSG.REQUEST)
 			self.parse_iv_value(ereq, self.idStore, TipoMSG.REQUEST)
 
-			print(self.hsm.parse_xml_to_pretty_string(ereq))		
-			ttlv = self.hsm.parse_xml_to_ttlv_bytes(ereq)
-	
-			print('3- Tempo antes de enviar o TTLV ao HSM') 
-			print(datetime.now())
-			
+			ttlv = self.hsm.parse_xml_to_ttlv_bytes(ereq)		
 			received = self.hsm.send_receive(ttlv)			
-			
-			print('4- Tempo depois de receber o TTLV do HSM')
-			print(datetime.now())
-
 			response = self.hsm.parse_ttlv_bytes_to_xml_tree(received)
 			responseWithSign = self.hsm.parse_xml_to_pretty_string(response)
-			print(responseWithSign)
-
 			matchSign = re.search(r'<SignatureData type=\"ByteString\" value=\"(.*?)\"/>', responseWithSign)			
 			matchValid = re.search(r'<ValidityIndicator type=\"Enumeration\" value=\"(.*?)\"/>', responseWithSign)			
 
 			if matchSign:
-				print('Passou aqui no match do SignatureData')
 				return matchSign.group(1)
 			elif matchValid:
 				if matchValid.group(1) == 'Valid':
-					print('Passou aqui no match do Valid')
 					return True
 				else:
 					return False

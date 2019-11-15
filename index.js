@@ -7,19 +7,12 @@ function onChange(event) {
     readerFile.readAsBinaryString(logFile);
     readerFile.onload = function(event){
         var arrayBuffer = event.target.result;
-        console.log(new Date().getHours() + ":" + new Date().getMinutes() + ":" + new Date().getSeconds() + ":" + new Date().getMilliseconds());
         hashDocumento = CryptoJS.SHA256(arrayBuffer).toString(CryptoJS.enc.Hex);
-        console.log(new Date().getHours() + ":" + new Date().getMinutes() + ":" + new Date().getSeconds() + ":" + new Date().getMilliseconds());
         arraySign.hash = hashDocumento;
-        console.log(arraySign)
     }
-    
 }
-//cd c:/Users/Felipe/Desktop/TCC/signaturepython/reporter/teste_sign.py
-function Sign () {  
-  
-  console.log(new Date().getHours() + ":" + new Date().getMinutes() + ":" + new Date().getSeconds() + ":" + new Date().getMilliseconds());
 
+function Sign () {
   arraySign.pin = document.getElementById("pin").value;
 
   var xmlhttp = new XMLHttpRequest();
@@ -36,14 +29,12 @@ function Sign () {
     } else {
         $("#isInvalid").show();
     }
-    console.log(new Date().getHours() + ":" + new Date().getMinutes() + ":" + new Date().getSeconds() + ":" + new Date().getMilliseconds());
     downloadFile(signature);
   } else {
     console.log(e);
   }
 }
   xmlhttp.send(JSON.stringify(arraySign))
-    //openssl req -config "C:\Program Files (x86)\GnuWin32\share\openssl.cnf" -nodes -x509 -newkey rsa:2048 -keyout keyfeliperluiz.pem -out certfeliperluiz.pem -days 365
 }
 
 function downloadFile(sign) {

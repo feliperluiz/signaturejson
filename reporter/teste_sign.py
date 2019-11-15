@@ -13,18 +13,13 @@ from flask_cors import CORS, cross_origin
 app = Flask(__name__)
 CORS(app)
 @app.route('/sign', methods = ['POST'])
-def postdata():
-
-    print('2- Tempo ao chegar do Cliente')
-    print(datetime.now())
-    
+def postdata():    
     jsonData = request.json;
     hash_to_sign = jsonData['hash']
     pin = jsonData['pin']
     linechange = "<Data type=\"ByteString\" value=\""+hash_to_sign+"\" />"
     linechangePass = "<Password type=\"TextString\" value=\""+pin+"\" />"
 
-    # cd C:/Users/Felipe/Desktop/TCC/signaturepython/reporter
     idStore = {}
     keyfile_hsm1 = "keyfelipe.pem"
     certfile_hsm1 = "certfelipe.pem"
@@ -63,10 +58,6 @@ def postdata():
     xml1 = XML_runner(hsm1, "teste_sign.xml", idStore)
     hash_signed = xml1.init_test()
     linechangeSignature = "<SignatureData type=\"ByteString\" value=\""+hash_signed+"\" />"
-
-    print('5- Tempo ao retornar o hash ao navegador')
-    print(datetime.now())
-
     verify_file = open("teste_verify.xml", "r")
     content = '';
     
@@ -99,8 +90,6 @@ def postdata():
 
     xml2 = XML_runner(hsm1, "teste_verify.xml", idStore)
     is_valid = xml2.init_test()
-    print('valid')
-    print(is_valid)
     hsm1.disconnect()
 
     data = {}
