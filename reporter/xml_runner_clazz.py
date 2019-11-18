@@ -1,10 +1,15 @@
-from kmiper.kmiper import *
 import sys
 import binascii
+import socket
+import ssl
+import re
 from datetime import datetime, timedelta
 from kmiper_class_3 import Kmiper
 from enum import Enum
-import re
+from kkmip import ttv
+from kkmip import types
+from xml.etree import ElementTree
+from xml.dom import minidom
 
 class TipoMSG(Enum):
 		REQUEST = 1
