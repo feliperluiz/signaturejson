@@ -4,8 +4,8 @@ import json
 import re
 import fileinput
 from datetime import datetime, timedelta
-from kmiper_class_3 import Kmiper
-from xml_runner_clazz import XML_runner
+from kmiper_class import Kmiper
+from xml_runner_class import XML_runner
 from flask import Flask, request
 from flask_cors import CORS, cross_origin
 

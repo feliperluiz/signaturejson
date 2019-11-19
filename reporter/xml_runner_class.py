@@ -4,7 +4,7 @@ import socket
 import ssl
 import re
 from datetime import datetime, timedelta
-from kmiper_class_3 import Kmiper
+from kmiper_class import Kmiper
 from enum import Enum
 from kkmip import ttv
 from kkmip import types
